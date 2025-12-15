@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <StartupObject>FuturisticDashboard.App</StartupObject>
     <Nullable>enable</Nullable>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
