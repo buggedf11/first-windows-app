@@ -49,10 +49,10 @@
                 <!-- Card 3: Network Status -->
                 <Border Width="380" Height="160" Margin="10" 
                         Background="{StaticResource SecondaryBrush}" 
-                        BorderBrush="{StaticResource AccentAlt}" BorderThickness="2"
+                        BorderBrush="{StaticResource AccentAltBrush}" BorderThickness="2"
                         CornerRadius="8">
                     <StackPanel Margin="20">
-                        <TextBlock Text="NETWORK" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentAlt}"/>
+                        <TextBlock Text="NETWORK" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentAltBrush}"/>
                         <TextBlock x:Name="NetworkStatus" Text="CONNECTED" FontSize="32" FontWeight="Bold" Foreground="{StaticResource TextBrush}" Margin="0,10,0,0"/>
                         <Ellipse Width="16" Height="16" Fill="#00FF00" Margin="0,10,0,0" HorizontalAlignment="Left"/>
                     </StackPanel>
@@ -96,10 +96,10 @@
                 <!-- Alert Panel -->
                 <Border Width="1180" Margin="10" 
                         Background="{StaticResource SecondaryBrush}" 
-                        BorderBrush="{StaticResource AccentAlt}" BorderThickness="2"
+                        BorderBrush="{StaticResource AccentAltBrush}" BorderThickness="2"
                         CornerRadius="8">
                     <StackPanel Margin="20">
-                        <TextBlock Text="SYSTEM ALERTS" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentAlt}"/>
+                        <TextBlock Text="SYSTEM ALERTS" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentAltBrush}"/>
                         <TextBlock x:Name="AlertsPanel" Text="• All systems operational" FontSize="14" Foreground="{StaticResource TextBrush}" Margin="0,10,0,0" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Border>
