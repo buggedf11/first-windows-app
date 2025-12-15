@@ -14,7 +14,7 @@
     <PackageReference Include="MaterialDesignColors" Version="2.1.4" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.1.2" />
     <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
-    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.25" />
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.3" />
   </ItemGroup>
 
 </Project>
