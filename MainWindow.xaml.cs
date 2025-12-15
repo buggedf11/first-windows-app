@@ -55,12 +55,12 @@ namespace FuturisticDashboard
             try
             {
                 // Update CPU Usage
-                float cpuUsage = _cpuCounter?.NextValue() ?? 0;
+                float cpuUsage = _cpuCounter != null ? _cpuCounter.NextValue() : 0;
                 CpuUsage.Text = $"{cpuUsage:F1}%";
                 CpuProgressBar.Value = Math.Min(100, cpuUsage);
 
                 // Update Memory Usage
-                float memUsage = _memoryCounter?.NextValue() ?? 0;
+                float memUsage = _memoryCounter != null ? _memoryCounter.NextValue() : 0;
                 MemUsage.Text = $"{memUsage:F1}%";
                 MemProgressBar.Value = Math.Min(100, memUsage);
 
@@ -99,7 +99,8 @@ namespace FuturisticDashboard
 
         private void Window_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
-            _updateTimer?.Stop();
+            if (_updateTimer != null)
+                _updateTimer.Stop();
             _cpuCounter?.Dispose();
             _memoryCounter?.Dispose();
         }
