@@ -7,17 +7,25 @@ namespace FuturisticDashboard
 {
     public partial class MainWindow : Window
     {
-        private DispatcherTimer _updateTimer;
-        private PerformanceCounter _cpuCounter;
-        private PerformanceCounter _memoryCounter;
+        private DispatcherTimer? _updateTimer;
+        private PerformanceCounter? _cpuCounter;
+        private PerformanceCounter? _memoryCounter;
         private DateTime _startTime;
 
         public MainWindow()
         {
-            InitializeComponent();
-            InitializePerformanceCounters();
-            _startTime = DateTime.Now;
-            SetupUpdateTimer();
+            try
+            {
+                InitializeComponent();
+                InitializePerformanceCounters();
+                _startTime = DateTime.Now;
+                SetupUpdateTimer();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error initializing dashboard: {ex.Message}\n\n{ex.StackTrace}", "Initialization Error");
+                this.Close();
+            }
         }
 
         private void InitializePerformanceCounters()
