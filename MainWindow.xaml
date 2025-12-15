@@ -11,7 +11,7 @@
         <!-- Header -->
         <Grid Height="80" VerticalAlignment="Top" Background="{StaticResource SecondaryBrush}">
             <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
-                <Grid Padding="30,20">
+                <Grid Margin="30,20">
                     <TextBlock Text="SYSTEM DASHBOARD" FontSize="28" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
                     <TextBlock x:Name="TimeDisplay" HorizontalAlignment="Right" FontSize="16" Foreground="{StaticResource TextSecondaryBrush}"/>
                 </Grid>
@@ -20,7 +20,7 @@
 
         <!-- Main Content -->
         <ScrollViewer Margin="0,80,0,0" VerticalScrollBarVisibility="Auto">
-            <Grid Padding="30">
+            <Grid Margin="30">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
