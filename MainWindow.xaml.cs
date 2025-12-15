@@ -193,8 +193,8 @@ namespace FuturisticDashboard
                 double used = (drive.TotalSize - drive.AvailableFreeSpace) / (1024d * 1024d * 1024d);
                 double free = drive.AvailableFreeSpace / (1024d * 1024d * 1024d);
 
-                series.Slices.Add(new PieSlice { Label = $"Used ({used:F0}GB)", Value = used, Fill = OxyColor.FromRgb(0, 217, 255) });
-                series.Slices.Add(new PieSlice { Label = $"Free ({free:F0}GB)", Value = free, Fill = OxyColor.FromRgb(48, 54, 61) });
+                series.Slices.Add(new PieSlice($"Used ({used:F0}GB)", used) { Fill = OxyColor.FromRgb(0, 217, 255) });
+                series.Slices.Add(new PieSlice($"Free ({free:F0}GB)", free) { Fill = OxyColor.FromRgb(48, 54, 61) });
                 DiskChart.InvalidatePlot();
             }
         }
@@ -224,7 +224,7 @@ namespace FuturisticDashboard
                 {
                     Process.GetProcessById(proc.Id).Kill();
                     MessageBox.Show($"Process {proc.Name} terminated.", "Success");
-                    RefreshProcesses_Click(null, null);
+                    RefreshProcesses_Click(sender, e);
                 }
                 catch (Exception ex)
                 {
@@ -299,7 +299,7 @@ namespace FuturisticDashboard
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.F11) ToggleFullscreen_Click(null, null);
+            if (e.Key == Key.F11) ToggleFullscreen_Click(sender, e);
         }
 
         protected override void OnClosed(EventArgs e)
