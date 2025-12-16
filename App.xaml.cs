@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace FuturisticDashboard
+namespace ServerLauncher
 {
     public partial class App : Application
     {
@@ -11,7 +11,7 @@ namespace FuturisticDashboard
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show($"Unhandled Exception: {e.Exception.Message}\n\n{e.Exception.StackTrace}", "Error");
+            MessageBox.Show($"Error: {e.Exception.Message}", "Application Error");
             e.Handled = true;
         }
     }

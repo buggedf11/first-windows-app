@@ -4,17 +4,16 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <StartupObject>FuturisticDashboard.App</StartupObject>
+    <StartupObject>ServerLauncher.App</StartupObject>
     <Nullable>enable</Nullable>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AssemblyName>ServerLauncher</AssemblyName>
+    <RootNamespace>ServerLauncher</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
     <PackageReference Include="MaterialDesignColors" Version="2.1.4" />
-    <PackageReference Include="OxyPlot.Wpf" Version="2.1.2" />
-    <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
-    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.3" />
   </ItemGroup>
 
 </Project>
