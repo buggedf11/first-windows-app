@@ -122,13 +122,13 @@
                         </Grid.RowDefinitions>
 
                         <!-- Settings Header with Close -->
-                        <Grid Background="#0B1220" Height="48" VerticalAlignment="Top" Padding="16">
+                        <Grid Background="#0B1220" Height="48" VerticalAlignment="Top">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="Settings" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center"/>
-                            <Button Grid.Column="1" Content="✖ Close" Click="CloseSettings_Click" Style="{StaticResource LaunchButton}" Padding="10,6"/>
+                            <TextBlock Text="Settings" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center" Margin="16,0"/>
+                            <Button Grid.Column="1" Content="✖ Close" Click="CloseSettings_Click" Style="{StaticResource LaunchButton}" Padding="10,6" Margin="0,0,16,0"/>
                         </Grid>
 
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
