@@ -277,7 +277,14 @@ namespace ServerLauncher
 
         private void OpenSettings_Click(object sender, RoutedEventArgs e)
         {
+            SettingsPanel.Visibility = Visibility.Visible;
             LogOutput("Settings opened. Update names and paths as needed.");
+        }
+
+        private void CloseSettings_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsPanel.Visibility = Visibility.Collapsed;
+            LogOutput("Settings closed.");
         }
 
         private void BrowseApi_Click(object sender, RoutedEventArgs e)

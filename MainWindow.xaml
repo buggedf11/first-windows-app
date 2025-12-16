@@ -20,7 +20,6 @@
                         <TextBlock x:Name="StatusText" Text="Ready" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Content="🗑 Clear" Click="ClearOutput_Click" Style="{StaticResource LaunchButton}" Padding="12,6" FontSize="12" Margin="0,0,10,0"/>
                         <Button Content="⚙ Settings" Click="OpenSettings_Click" Style="{StaticResource LaunchButton}" Padding="12,6" FontSize="12"/>
                     </StackPanel>
                 </Grid>
@@ -88,39 +87,51 @@
                 </ScrollViewer>
             </Border>
 
-            <!-- Right Side Tabs -->
-            <Border Grid.Column="1" Background="{StaticResource SecondaryBrush}" Margin="0,16,16,16" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="10">
-                <TabControl Background="{StaticResource SecondaryBrush}" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937">
-                    <!-- Output Tab -->
-                    <TabItem Header="Output">
-                        <Grid Margin="18">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+            <!-- Right Side: Output + Toggleable Settings -->
+            <Grid Grid.Column="1" Margin="0,16,16,16">
+                <!-- Output Panel -->
+                <Border Background="{StaticResource SecondaryBrush}" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="10">
+                    <Grid Margin="18">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                            <Grid Grid.Row="0" Margin="0,0,0,10">
-                                <TextBlock Text="OUTPUT" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
-                                <Button Content="🗑 Clear" Click="ClearOutput_Click" Style="{StaticResource LaunchButton}" HorizontalAlignment="Right" Padding="10,5" FontSize="11"/>
-                            </Grid>
+                        <TextBlock Text="OUTPUT" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
 
-                            <Border Grid.Row="1" Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                    <TextBlock x:Name="OutputText" 
-                                               Text="[Ready]\n" 
-                                               Foreground="{StaticResource AccentBrush}" 
-                                               FontFamily="Consolas" 
-                                               FontSize="11" 
-                                               Margin="12"
-                                               TextWrapping="Wrap"/>
-                                </ScrollViewer>
-                            </Border>
+                        <Border Grid.Row="1" Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <TextBlock x:Name="OutputText" 
+                                           Text="[Ready]\n" 
+                                           Foreground="{StaticResource AccentBrush}" 
+                                           FontFamily="Consolas" 
+                                           FontSize="11" 
+                                           Margin="12"
+                                           TextWrapping="Wrap"/>
+                            </ScrollViewer>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Settings Overlay Panel -->
+                <Border x:Name="SettingsPanel" Visibility="Collapsed" Background="{StaticResource SecondaryBrush}" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="10" Margin="0" Padding="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Settings Header with Close -->
+                        <Grid Background="#0B1220" Height="48" VerticalAlignment="Top" Padding="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Settings" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Content="✖ Close" Click="CloseSettings_Click" Style="{StaticResource LaunchButton}" Padding="10,6"/>
                         </Grid>
-                    </TabItem>
 
-                    <!-- Settings Tab -->
-                    <TabItem Header="Settings">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                             <StackPanel Margin="18">
                                 <TextBlock Text="SERVER SETTINGS" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
 
@@ -172,9 +183,9 @@
                                 </StackPanel>
                             </StackPanel>
                         </ScrollViewer>
-                    </TabItem>
-                </TabControl>
-            </Border>
+                    </Grid>
+                </Border>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
