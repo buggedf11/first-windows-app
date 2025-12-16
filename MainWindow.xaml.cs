@@ -163,6 +163,24 @@ namespace ServerLauncher
             }
         }
 
+        private void RemoveLastServer_Click(object sender, RoutedEventArgs e)
+        {
+            if (Servers.Count == 0)
+            {
+                SettingsInfo.Text = "No servers to remove.";
+                return;
+            }
+            var entry = Servers[^1];
+            try
+            {
+                entry.Process?.Kill();
+            }
+            catch { }
+            Servers.RemoveAt(Servers.Count - 1);
+            SettingsInfo.Text = "Removed last server.";
+            LogOutput("Removed last server entry.");
+        }
+
         private void ClearOutput_Click(object sender, RoutedEventArgs e)
         {
             OutputText.Text = "";

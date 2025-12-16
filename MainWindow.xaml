@@ -19,7 +19,9 @@
                         <TextBlock Text="SERVER LAUNCHER" FontSize="26" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
                         <TextBlock x:Name="StatusText" Text="Ready" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="⚙ Settings" Click="OpenSettings_Click" Style="{StaticResource LaunchButton}" Padding="12,6" FontSize="12"/>
+                    </StackPanel>
                 </Grid>
             </Border>
         </Grid>
@@ -45,7 +47,6 @@
                                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                                                 <Button Content="▶ Start" Style="{StaticResource LaunchButton}" Padding="12,8" Margin="0,0,8,0" Click="StartServer_Click" Tag="{Binding}"/>
                                                 <Button Content="⏹ Stop" Style="{StaticResource LaunchButton}" Background="{StaticResource ErrorBrush}" Padding="12,8" Click="StopServer_Click" Tag="{Binding}"/>
-                                                <Button Content="✖ Remove" Style="{StaticResource LaunchButton}" Padding="12,8" Margin="8,0,0,0" Click="RemoveServer_Click" Tag="{Binding}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0" VerticalAlignment="Center">
                                                 <Ellipse Width="12" Height="12" Fill="{Binding StatusBrush}"/>
@@ -155,6 +156,7 @@
 
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
                                     <Button Content="Add Server" Click="AddServer_Click" Style="{StaticResource LaunchButton}" Padding="14,8" Margin="0,0,10,0"/>
+                                    <Button Content="Remove Server" Click="RemoveLastServer_Click" Style="{StaticResource LaunchButton}" Padding="14,8" Margin="0,0,10,0"/>
                                     <Button Content="Save Settings" Click="SaveSettings_Click" Style="{StaticResource LaunchButton}" Padding="16,10" Margin="0,0,10,0"/>
                                     <Button Content="Clear Output" Click="ClearOutput_Click" Style="{StaticResource LaunchButton}" Padding="12,8" Margin="0,0,10,0"/>
                                     <TextBlock x:Name="SettingsInfo" Text="" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
