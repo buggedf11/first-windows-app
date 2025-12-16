@@ -73,8 +73,18 @@ namespace ServerLauncher
                         Arguments = $"/c \"{_apiPath}\"",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
+                        RedirectStandardError = true,
                         CreateNoWindow = true
-                    }
+                    },
+                    EnableRaisingEvents = true
+                };
+                _apiServerProcess.Exited += (_, __) =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        LogOutput($"{_apiName} exited.");
+                        UpdateStatus(ApiServerStatus, ApiServerStatusText, false);
+                    });
                 };
 
                 _apiServerProcess.Start();
@@ -137,8 +147,18 @@ namespace ServerLauncher
                         Arguments = $"/c \"{_webPath}\"",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
+                        RedirectStandardError = true,
                         CreateNoWindow = true
-                    }
+                    },
+                    EnableRaisingEvents = true
+                };
+                _webServerProcess.Exited += (_, __) =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        LogOutput($"{_webName} exited.");
+                        UpdateStatus(WebServerStatus, WebServerStatusText, false);
+                    });
                 };
 
                 _webServerProcess.Start();
@@ -201,8 +221,18 @@ namespace ServerLauncher
                         Arguments = $"/c \"{_dbPath}\"",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
+                        RedirectStandardError = true,
                         CreateNoWindow = true
-                    }
+                    },
+                    EnableRaisingEvents = true
+                };
+                _databaseProcess.Exited += (_, __) =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        LogOutput($"{_dbName} exited.");
+                        UpdateStatus(DatabaseStatus, DatabaseStatusText, false);
+                    });
                 };
 
                 _databaseProcess.Start();
