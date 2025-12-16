@@ -251,9 +251,14 @@ namespace ServerLauncher
 
         protected override void OnClosed(EventArgs e)
         {
-            _apiServerProcess?.Kill();
-            _webServerProcess?.Kill();
-            _databaseProcess?.Kill();
+            foreach (var s in Servers)
+            {
+                try
+                {
+                    s.Process?.Kill();
+                }
+                catch { }
+            }
             base.OnClosed(e);
         }
     }
