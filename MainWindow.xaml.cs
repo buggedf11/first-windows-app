@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using System.Windows.Media.Effects;
 
 namespace ServerLauncher
 {
@@ -278,12 +279,16 @@ namespace ServerLauncher
         private void OpenSettings_Click(object sender, RoutedEventArgs e)
         {
             SettingsPanel.Visibility = Visibility.Visible;
+            Backdrop.Visibility = Visibility.Visible;
+            OutputPanel.Effect = new BlurEffect { Radius = 6 };
             LogOutput("Settings opened. Update names and paths as needed.");
         }
 
         private void CloseSettings_Click(object sender, RoutedEventArgs e)
         {
             SettingsPanel.Visibility = Visibility.Collapsed;
+            Backdrop.Visibility = Visibility.Collapsed;
+            OutputPanel.Effect = null;
             LogOutput("Settings closed.");
         }
 

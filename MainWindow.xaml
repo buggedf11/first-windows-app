@@ -88,30 +88,33 @@
             </Border>
 
             <!-- Right Side: Output + Toggleable Settings -->
-            <Grid Grid.Column="1" Margin="0,16,16,16">
+            <Grid Grid.Column="1" Margin="0,16,16,16" x:Name="RightPane">
                 <!-- Output Panel -->
-                <Border Background="{StaticResource SecondaryBrush}" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="10">
+                <Border x:Name="OutputPanel" Background="{StaticResource SecondaryBrush}" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="10">
                     <Grid Margin="18">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="OUTPUT" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+                        <TextBlock Text="Output" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}"/>
 
                         <Border Grid.Row="1" Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <TextBlock x:Name="OutputText" 
                                            Text="[Ready]\n" 
-                                           Foreground="{StaticResource AccentBrush}" 
-                                           FontFamily="Consolas" 
-                                           FontSize="11" 
-                                           Margin="12"
+                                               Foreground="{StaticResource AccentBrush}" 
+                                               FontFamily="Consolas" 
+                                               FontSize="12" 
+                                               Margin="14"
                                            TextWrapping="Wrap"/>
                             </ScrollViewer>
                         </Border>
                     </Grid>
                 </Border>
+
+                <!-- Backdrop dim behind Settings -->
+                <Rectangle x:Name="Backdrop" Fill="#000000" Opacity="0.35" Visibility="Collapsed" RadiusX="8" RadiusY="8"/>
 
                 <!-- Settings Overlay Panel -->
                 <Border x:Name="SettingsPanel" Visibility="Collapsed" Background="{StaticResource SecondaryBrush}" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="10" Margin="0" Padding="0">
@@ -122,26 +125,26 @@
                         </Grid.RowDefinitions>
 
                         <!-- Settings Header with Close -->
-                        <Grid Background="#0B1220" Height="48" VerticalAlignment="Top">
+                        <Grid Background="#0B1220" Height="50" VerticalAlignment="Top">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="Settings" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center" Margin="16,0"/>
-                            <Button Grid.Column="1" Content="✖ Close" Click="CloseSettings_Click" Style="{StaticResource LaunchButton}" Padding="10,6" Margin="0,0,16,0"/>
+                            <TextBlock Text="Settings" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center" Margin="16,0"/>
+                            <Button Grid.Column="1" Content="✖ Close" Click="CloseSettings_Click" Style="{StaticResource LaunchButton}" Padding="12,8" Margin="0,0,16,0"/>
                         </Grid>
 
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                             <StackPanel Margin="18">
-                                <TextBlock Text="SERVER SETTINGS" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+                                <TextBlock Text="Server Settings" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}"/>
 
                                 <!-- API Settings -->
                                 <Border Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,14,0,0">
                                     <StackPanel>
-                                        <TextBlock Text="API Server" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
-                                        <TextBlock Text="Display Name" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
-                                        <TextBox x:Name="ApiNameInput" Text="API Server" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" Margin="0,2,0,0"/>
-                                        <TextBlock Text="Executable / Script" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
+                                        <TextBlock Text="API Server" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                                        <TextBlock Text="Display Name" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
+                                        <TextBox x:Name="ApiNameInput" Text="API Server" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" Margin="0,4,0,0"/>
+                                        <TextBlock Text="Executable / Script" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
                                         <DockPanel Margin="0,2,0,0">
                                             <TextBox x:Name="ApiPathInput" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" MinWidth="200"/>
                                             <Button Content="Browse" Click="BrowseApi_Click" Style="{StaticResource LaunchButton}" Padding="10,6" Margin="8,0,0,0"/>
@@ -152,10 +155,10 @@
                                 <!-- Web Settings -->
                                 <Border Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,14,0,0">
                                     <StackPanel>
-                                        <TextBlock Text="Web Server" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
-                                        <TextBlock Text="Display Name" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
-                                        <TextBox x:Name="WebNameInput" Text="Web Server" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" Margin="0,2,0,0"/>
-                                        <TextBlock Text="Executable / Script" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
+                                        <TextBlock Text="Web Server" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                                        <TextBlock Text="Display Name" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
+                                        <TextBox x:Name="WebNameInput" Text="Web Server" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" Margin="0,4,0,0"/>
+                                        <TextBlock Text="Executable / Script" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
                                         <DockPanel Margin="0,2,0,0">
                                             <TextBox x:Name="WebPathInput" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" MinWidth="200"/>
                                             <Button Content="Browse" Click="BrowseWeb_Click" Style="{StaticResource LaunchButton}" Padding="10,6" Margin="8,0,0,0"/>
@@ -166,10 +169,10 @@
                                 <!-- Database Settings -->
                                 <Border Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,14,0,0">
                                     <StackPanel>
-                                        <TextBlock Text="Database" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
-                                        <TextBlock Text="Display Name" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
-                                        <TextBox x:Name="DbNameInput" Text="Database" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" Margin="0,2,0,0"/>
-                                        <TextBlock Text="Executable / Script" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
+                                        <TextBlock Text="Database" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                                        <TextBlock Text="Display Name" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
+                                        <TextBox x:Name="DbNameInput" Text="Database" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" Margin="0,4,0,0"/>
+                                        <TextBlock Text="Executable / Script" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0"/>
                                         <DockPanel Margin="0,2,0,0">
                                             <TextBox x:Name="DbPathInput" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" MinWidth="200"/>
                                             <Button Content="Browse" Click="BrowseDb_Click" Style="{StaticResource LaunchButton}" Padding="10,6" Margin="8,0,0,0"/>
@@ -179,7 +182,7 @@
 
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
                                     <Button Content="Save Settings" Click="SaveSettings_Click" Style="{StaticResource LaunchButton}" Padding="16,10" Margin="0,0,10,0"/>
-                                    <TextBlock x:Name="SettingsInfo" Text="" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="SettingsInfo" Text="" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </StackPanel>
                         </ScrollViewer>
