@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace ServerLauncher
 {
@@ -12,6 +13,13 @@ namespace ServerLauncher
         private Process? _apiServerProcess;
         private Process? _webServerProcess;
         private Process? _databaseProcess;
+
+        private string _apiPath = string.Empty;
+        private string _webPath = string.Empty;
+        private string _dbPath = string.Empty;
+        private string _apiName = "API Server";
+        private string _webName = "Web Server";
+        private string _dbName = "Database";
 
         public MainWindow()
         {
@@ -50,13 +58,19 @@ namespace ServerLauncher
 
             try
             {
-                LogOutput("Starting API Server...");
+                if (string.IsNullOrWhiteSpace(_apiPath))
+                {
+                    LogOutput("API path is empty. Set it in Settings.");
+                    return;
+                }
+
+                LogOutput($"Starting {_apiName}...");
                 _apiServerProcess = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "cmd.exe",
-                        Arguments = "/c echo API Server started successfully",
+                        Arguments = $"/c \"{_apiPath}\"",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         CreateNoWindow = true
@@ -64,12 +78,12 @@ namespace ServerLauncher
                 };
 
                 _apiServerProcess.Start();
-                LogOutput("✓ API Server started!");
+                LogOutput($"✓ {_apiName} started!");
                 UpdateStatus(ApiServerStatus, ApiServerStatusText, true);
             }
             catch (Exception ex)
             {
-                LogOutput($"✗ Failed to start API Server: {ex.Message}");
+                LogOutput($"✗ Failed to start {_apiName}: {ex.Message}");
                 UpdateStatus(ApiServerStatus, ApiServerStatusText, false);
             }
         }
@@ -80,20 +94,20 @@ namespace ServerLauncher
             {
                 if (_apiServerProcess != null && !_apiServerProcess.HasExited)
                 {
-                    LogOutput("Stopping API Server...");
+                    LogOutput($"Stopping {_apiName}...");
                     _apiServerProcess.Kill();
                     _apiServerProcess.WaitForExit();
-                    LogOutput("✓ API Server stopped!");
+                    LogOutput($"✓ {_apiName} stopped!");
                 }
                 else
                 {
-                    LogOutput("API Server is not running");
+                    LogOutput($"{_apiName} is not running");
                 }
                 UpdateStatus(ApiServerStatus, ApiServerStatusText, false);
             }
             catch (Exception ex)
             {
-                LogOutput($"✗ Failed to stop API Server: {ex.Message}");
+                LogOutput($"✗ Failed to stop {_apiName}: {ex.Message}");
             }
         }
 
@@ -108,13 +122,19 @@ namespace ServerLauncher
 
             try
             {
-                LogOutput("Starting Web Server...");
+                if (string.IsNullOrWhiteSpace(_webPath))
+                {
+                    LogOutput("Web path is empty. Set it in Settings.");
+                    return;
+                }
+
+                LogOutput($"Starting {_webName}...");
                 _webServerProcess = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "cmd.exe",
-                        Arguments = "/c echo Web Server started successfully",
+                        Arguments = $"/c \"{_webPath}\"",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         CreateNoWindow = true
@@ -122,12 +142,12 @@ namespace ServerLauncher
                 };
 
                 _webServerProcess.Start();
-                LogOutput("✓ Web Server started!");
+                LogOutput($"✓ {_webName} started!");
                 UpdateStatus(WebServerStatus, WebServerStatusText, true);
             }
             catch (Exception ex)
             {
-                LogOutput($"✗ Failed to start Web Server: {ex.Message}");
+                LogOutput($"✗ Failed to start {_webName}: {ex.Message}");
                 UpdateStatus(WebServerStatus, WebServerStatusText, false);
             }
         }
@@ -138,20 +158,20 @@ namespace ServerLauncher
             {
                 if (_webServerProcess != null && !_webServerProcess.HasExited)
                 {
-                    LogOutput("Stopping Web Server...");
+                    LogOutput($"Stopping {_webName}...");
                     _webServerProcess.Kill();
                     _webServerProcess.WaitForExit();
-                    LogOutput("✓ Web Server stopped!");
+                    LogOutput($"✓ {_webName} stopped!");
                 }
                 else
                 {
-                    LogOutput("Web Server is not running");
+                    LogOutput($"{_webName} is not running");
                 }
                 UpdateStatus(WebServerStatus, WebServerStatusText, false);
             }
             catch (Exception ex)
             {
-                LogOutput($"✗ Failed to stop Web Server: {ex.Message}");
+                LogOutput($"✗ Failed to stop {_webName}: {ex.Message}");
             }
         }
 
@@ -166,13 +186,19 @@ namespace ServerLauncher
 
             try
             {
-                LogOutput("Starting Database...");
+                if (string.IsNullOrWhiteSpace(_dbPath))
+                {
+                    LogOutput("Database path is empty. Set it in Settings.");
+                    return;
+                }
+
+                LogOutput($"Starting {_dbName}...");
                 _databaseProcess = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "cmd.exe",
-                        Arguments = "/c echo Database started successfully",
+                        Arguments = $"/c \"{_dbPath}\"",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         CreateNoWindow = true
@@ -180,12 +206,12 @@ namespace ServerLauncher
                 };
 
                 _databaseProcess.Start();
-                LogOutput("✓ Database started!");
+                LogOutput($"✓ {_dbName} started!");
                 UpdateStatus(DatabaseStatus, DatabaseStatusText, true);
             }
             catch (Exception ex)
             {
-                LogOutput($"✗ Failed to start Database: {ex.Message}");
+                LogOutput($"✗ Failed to start {_dbName}: {ex.Message}");
                 UpdateStatus(DatabaseStatus, DatabaseStatusText, false);
             }
         }
@@ -196,20 +222,20 @@ namespace ServerLauncher
             {
                 if (_databaseProcess != null && !_databaseProcess.HasExited)
                 {
-                    LogOutput("Stopping Database...");
+                    LogOutput($"Stopping {_dbName}...");
                     _databaseProcess.Kill();
                     _databaseProcess.WaitForExit();
-                    LogOutput("✓ Database stopped!");
+                    LogOutput($"✓ {_dbName} stopped!");
                 }
                 else
                 {
-                    LogOutput("Database is not running");
+                    LogOutput($"{_dbName} is not running");
                 }
                 UpdateStatus(DatabaseStatus, DatabaseStatusText, false);
             }
             catch (Exception ex)
             {
-                LogOutput($"✗ Failed to stop Database: {ex.Message}");
+                LogOutput($"✗ Failed to stop {_dbName}: {ex.Message}");
             }
         }
 
@@ -221,7 +247,52 @@ namespace ServerLauncher
 
         private void OpenSettings_Click(object sender, RoutedEventArgs e)
         {
-            LogOutput("Settings: Configure server paths in the code or use a config file");
+            LogOutput("Settings opened. Update names and paths as needed.");
+        }
+
+        private void BrowseApi_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog { Title = "Select API executable" };
+            if (dialog.ShowDialog() == true)
+            {
+                ApiPathInput.Text = dialog.FileName;
+            }
+        }
+
+        private void BrowseWeb_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog { Title = "Select Web executable" };
+            if (dialog.ShowDialog() == true)
+            {
+                WebPathInput.Text = dialog.FileName;
+            }
+        }
+
+        private void BrowseDb_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog { Title = "Select Database executable" };
+            if (dialog.ShowDialog() == true)
+            {
+                DbPathInput.Text = dialog.FileName;
+            }
+        }
+
+        private void SaveSettings_Click(object sender, RoutedEventArgs e)
+        {
+            _apiName = string.IsNullOrWhiteSpace(ApiNameInput.Text) ? "API Server" : ApiNameInput.Text.Trim();
+            _webName = string.IsNullOrWhiteSpace(WebNameInput.Text) ? "Web Server" : WebNameInput.Text.Trim();
+            _dbName = string.IsNullOrWhiteSpace(DbNameInput.Text) ? "Database" : DbNameInput.Text.Trim();
+
+            _apiPath = ApiPathInput.Text.Trim();
+            _webPath = WebPathInput.Text.Trim();
+            _dbPath = DbPathInput.Text.Trim();
+
+            ApiNameText.Text = _apiName;
+            WebNameText.Text = _webName;
+            DbNameText.Text = _dbName;
+
+            SettingsInfo.Text = "Saved.";
+            LogOutput("Settings saved. Updated names and paths.");
         }
 
         protected override void OnClosed(EventArgs e)

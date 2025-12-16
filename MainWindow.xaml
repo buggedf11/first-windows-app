@@ -1,89 +1,179 @@
 <Window x:Class="ServerLauncher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Server Launcher" Height="700" Width="1000"
+        Title="Server Launcher" Height="760" Width="1180"
         Background="{StaticResource PrimaryBrush}"
         Foreground="{StaticResource TextBrush}"
         WindowStartupLocation="CenterScreen">
     
     <Grid>
         <!-- Header -->
-        <Grid Height="70" VerticalAlignment="Top" Background="{StaticResource SecondaryBrush}">
-            <Border BorderBrush="#30363D" BorderThickness="0,0,0,2" VerticalAlignment="Center">
-                <StackPanel Margin="30,15">
-                    <TextBlock Text="SERVER LAUNCHER" FontSize="24" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
-                    <TextBlock x:Name="StatusText" Text="Ready" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                </StackPanel>
+        <Grid Height="78" VerticalAlignment="Top" Background="{StaticResource SecondaryBrush}">
+            <Border BorderBrush="#1F2937" BorderThickness="0,0,0,2" VerticalAlignment="Center">
+                <Grid Margin="28,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="SERVER LAUNCHER" FontSize="26" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+                        <TextBlock x:Name="StatusText" Text="Ready" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Spacing="10">
+                        <Button Content="🗑 Clear" Click="ClearOutput_Click" Style="{StaticResource LaunchButton}" Padding="12,6" FontSize="12"/>
+                        <Button Content="⚙ Settings" Click="OpenSettings_Click" Style="{StaticResource LaunchButton}" Padding="12,6" FontSize="12"/>
+                    </StackPanel>
+                </Grid>
             </Border>
         </Grid>
 
         <!-- Main Content -->
-        <Grid Margin="0,70,0,0">
+        <Grid Margin="0,78,0,0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="360"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Servers Panel -->
-            <Border Grid.Column="0" Background="{StaticResource SecondaryBrush}" Margin="15,15,7,15" BorderBrush="#30363D" BorderThickness="1" CornerRadius="8">
-                <StackPanel Margin="20">
-                    <TextBlock Text="SERVERS" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,15"/>
-                    
-                    <!-- Server Buttons -->
-                    <Border Background="#0D1117" BorderBrush="#30363D" BorderThickness="1" CornerRadius="6" Padding="15" Margin="0,0,0,10">
-                        <StackPanel>
-                            <TextBlock Text="API Server" FontSize="12" Foreground="{StaticResource TextBrush}" FontWeight="Bold" Margin="0,0,0,8"/>
-                            <Button Content="▶ Start" Click="StartApiServer_Click" Style="{StaticResource LaunchButton}" Margin="0,0,0,5"/>
-                            <Button Content="⏹ Stop" Click="StopApiServer_Click" Style="{StaticResource LaunchButton}" Background="{StaticResource ErrorBrush}"/>
-                            <Ellipse x:Name="ApiServerStatus" Width="12" Height="12" Fill="{StaticResource ErrorBrush}" Margin="0,10,0,0" HorizontalAlignment="Left"/>
-                            <TextBlock x:Name="ApiServerStatusText" Text="Offline" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,5,0,0"/>
-                        </StackPanel>
-                    </Border>
+            <!-- Servers Panel with Scroll -->
+            <Border Grid.Column="0" Background="{StaticResource SecondaryBrush}" Margin="16" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="10">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="18" Spacing="12">
+                        <TextBlock Text="SERVERS" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
 
-                    <Border Background="#0D1117" BorderBrush="#30363D" BorderThickness="1" CornerRadius="6" Padding="15" Margin="0,0,0,10">
-                        <StackPanel>
-                            <TextBlock Text="Web Server" FontSize="12" Foreground="{StaticResource TextBrush}" FontWeight="Bold" Margin="0,0,0,8"/>
-                            <Button Content="▶ Start" Click="StartWebServer_Click" Style="{StaticResource LaunchButton}" Margin="0,0,0,5"/>
-                            <Button Content="⏹ Stop" Click="StopWebServer_Click" Style="{StaticResource LaunchButton}" Background="{StaticResource ErrorBrush}"/>
-                            <Ellipse x:Name="WebServerStatus" Width="12" Height="12" Fill="{StaticResource ErrorBrush}" Margin="0,10,0,0" HorizontalAlignment="Left"/>
-                            <TextBlock x:Name="WebServerStatusText" Text="Offline" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,5,0,0"/>
-                        </StackPanel>
-                    </Border>
+                        <!-- API Server Card -->
+                        <Border Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <TextBlock x:Name="ApiNameText" Text="API Server" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10,0,0">
+                                    <Button Content="▶ Start" Click="StartApiServer_Click" Style="{StaticResource LaunchButton}" Padding="12,8"/>
+                                    <Button Content="⏹ Stop" Click="StopApiServer_Click" Style="{StaticResource LaunchButton}" Background="{StaticResource ErrorBrush}" Padding="12,8"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10,0,0" VerticalAlignment="Center">
+                                    <Ellipse x:Name="ApiServerStatus" Width="12" Height="12" Fill="{StaticResource ErrorBrush}"/>
+                                    <TextBlock x:Name="ApiServerStatusText" Text="Offline" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
 
-                    <Border Background="#0D1117" BorderBrush="#30363D" BorderThickness="1" CornerRadius="6" Padding="15" Margin="0,0,0,10">
-                        <StackPanel>
-                            <TextBlock Text="Database" FontSize="12" Foreground="{StaticResource TextBrush}" FontWeight="Bold" Margin="0,0,0,8"/>
-                            <Button Content="▶ Start" Click="StartDatabase_Click" Style="{StaticResource LaunchButton}" Margin="0,0,0,5"/>
-                            <Button Content="⏹ Stop" Click="StopDatabase_Click" Style="{StaticResource LaunchButton}" Background="{StaticResource ErrorBrush}"/>
-                            <Ellipse x:Name="DatabaseStatus" Width="12" Height="12" Fill="{StaticResource ErrorBrush}" Margin="0,10,0,0" HorizontalAlignment="Left"/>
-                            <TextBlock x:Name="DatabaseStatusText" Text="Offline" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,5,0,0"/>
-                        </StackPanel>
-                    </Border>
+                        <!-- Web Server Card -->
+                        <Border Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <TextBlock x:Name="WebNameText" Text="Web Server" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10,0,0">
+                                    <Button Content="▶ Start" Click="StartWebServer_Click" Style="{StaticResource LaunchButton}" Padding="12,8"/>
+                                    <Button Content="⏹ Stop" Click="StopWebServer_Click" Style="{StaticResource LaunchButton}" Background="{StaticResource ErrorBrush}" Padding="12,8"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10,0,0" VerticalAlignment="Center">
+                                    <Ellipse x:Name="WebServerStatus" Width="12" Height="12" Fill="{StaticResource ErrorBrush}"/>
+                                    <TextBlock x:Name="WebServerStatusText" Text="Offline" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
 
-                    <Button Content="⚙ Settings" Click="OpenSettings_Click" Style="{StaticResource LaunchButton}" Width="100" HorizontalAlignment="Left" Margin="0,15,0,0"/>
-                </StackPanel>
+                        <!-- Database Card -->
+                        <Border Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <TextBlock x:Name="DbNameText" Text="Database" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10,0,0">
+                                    <Button Content="▶ Start" Click="StartDatabase_Click" Style="{StaticResource LaunchButton}" Padding="12,8"/>
+                                    <Button Content="⏹ Stop" Click="StopDatabase_Click" Style="{StaticResource LaunchButton}" Background="{StaticResource ErrorBrush}" Padding="12,8"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10,0,0" VerticalAlignment="Center">
+                                    <Ellipse x:Name="DatabaseStatus" Width="12" Height="12" Fill="{StaticResource ErrorBrush}"/>
+                                    <TextBlock x:Name="DatabaseStatusText" Text="Offline" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
             </Border>
 
-            <!-- Output Panel -->
-            <Border Grid.Column="1" Background="{StaticResource SecondaryBrush}" Margin="7,15,15,15" BorderBrush="#30363D" BorderThickness="1" CornerRadius="8">
-                <StackPanel Margin="20">
-                    <Grid Margin="0,0,0,10">
-                        <TextBlock Text="OUTPUT" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
-                        <Button Content="🗑 Clear" Click="ClearOutput_Click" Style="{StaticResource LaunchButton}" HorizontalAlignment="Right" Padding="10,5" FontSize="11"/>
-                    </Grid>
+            <!-- Right Side Tabs -->
+            <Border Grid.Column="1" Background="{StaticResource SecondaryBrush}" Margin="0,16,16,16" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="10">
+                <TabControl Background="{StaticResource SecondaryBrush}" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937">
+                    <!-- Output Tab -->
+                    <TabItem Header="Output">
+                        <Grid Margin="18">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                    <Border Background="#0D1117" BorderBrush="#30363D" BorderThickness="1" CornerRadius="6" Height="550">
+                            <Grid Grid.Row="0" Margin="0,0,0,10">
+                                <TextBlock Text="OUTPUT" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+                                <Button Content="🗑 Clear" Click="ClearOutput_Click" Style="{StaticResource LaunchButton}" HorizontalAlignment="Right" Padding="10,5" FontSize="11"/>
+                            </Grid>
+
+                            <Border Grid.Row="1" Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <TextBlock x:Name="OutputText" 
+                                               Text="[Ready]\n" 
+                                               Foreground="{StaticResource AccentBrush}" 
+                                               FontFamily="Consolas" 
+                                               FontSize="11" 
+                                               Margin="12"
+                                               TextWrapping="Wrap"/>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- Settings Tab -->
+                    <TabItem Header="Settings">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <TextBlock x:Name="OutputText" 
-                                       Text="[Ready]&#10;" 
-                                       Foreground="{StaticResource AccentBrush}" 
-                                       FontFamily="Courier New" 
-                                       FontSize="11" 
-                                       Margin="10,10,10,10"
-                                       TextWrapping="Wrap"/>
+                            <StackPanel Margin="18" Spacing="14">
+                                <TextBlock Text="SERVER SETTINGS" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+
+                                <!-- API Settings -->
+                                <Border Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8" Padding="14">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="API Server" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
+                                        <TextBlock Text="Display Name" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <TextBox x:Name="ApiNameInput" Text="API Server" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937"/>
+                                        <TextBlock Text="Executable / Script" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <DockPanel>
+                                            <TextBox x:Name="ApiPathInput" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" MinWidth="200"/>
+                                            <Button Content="Browse" Click="BrowseApi_Click" Style="{StaticResource LaunchButton}" Padding="10,6" Margin="8,0,0,0"/>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Web Settings -->
+                                <Border Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8" Padding="14">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="Web Server" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
+                                        <TextBlock Text="Display Name" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <TextBox x:Name="WebNameInput" Text="Web Server" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937"/>
+                                        <TextBlock Text="Executable / Script" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <DockPanel>
+                                            <TextBox x:Name="WebPathInput" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" MinWidth="200"/>
+                                            <Button Content="Browse" Click="BrowseWeb_Click" Style="{StaticResource LaunchButton}" Padding="10,6" Margin="8,0,0,0"/>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Database Settings -->
+                                <Border Background="#0B1220" BorderBrush="#1F2937" BorderThickness="1" CornerRadius="8" Padding="14">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="Database" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextBrush}"/>
+                                        <TextBlock Text="Display Name" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <TextBox x:Name="DbNameInput" Text="Database" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937"/>
+                                        <TextBlock Text="Executable / Script" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <DockPanel>
+                                            <TextBox x:Name="DbPathInput" Background="#0F172A" Foreground="{StaticResource TextBrush}" BorderBrush="#1F2937" MinWidth="200"/>
+                                            <Button Content="Browse" Click="BrowseDb_Click" Style="{StaticResource LaunchButton}" Padding="10,6" Margin="8,0,0,0"/>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Left" Margin="0,4,0,0">
+                                    <Button Content="Save Settings" Click="SaveSettings_Click" Style="{StaticResource LaunchButton}" Padding="16,10"/>
+                                    <TextBlock x:Name="SettingsInfo" Text="" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
                         </ScrollViewer>
-                    </Border>
-                </StackPanel>
+                    </TabItem>
+                </TabControl>
             </Border>
         </Grid>
     </Grid>
