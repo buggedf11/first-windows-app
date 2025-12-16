@@ -6,25 +6,43 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.Windows.Media.Effects;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace ServerLauncher
 {
     public partial class MainWindow : Window
     {
-        private Process? _apiServerProcess;
-        private Process? _webServerProcess;
-        private Process? _databaseProcess;
+        public class ServerEntry : INotifyPropertyChanged
+        {
+            public string Name { get; set; } = "New Server";
+            public string Path { get; set; } = string.Empty;
+            public Process? Process { get; set; }
+            private bool _running;
+            public bool Running
+            {
+                get => _running;
+                set { _running = value; OnPropertyChanged(nameof(Running)); OnPropertyChanged(nameof(StatusText)); OnPropertyChanged(nameof(StatusBrush)); }
+            }
 
-        private string _apiPath = string.Empty;
-        private string _webPath = string.Empty;
-        private string _dbPath = string.Empty;
-        private string _apiName = "API Server";
-        private string _webName = "Web Server";
-        private string _dbName = "Database";
+            public string StatusText => Running ? "Running ✓" : "Offline";
+            public SolidColorBrush StatusBrush => Running ? (SolidColorBrush)Application.Current.Resources["SuccessBrush"] : (SolidColorBrush)Application.Current.Resources["ErrorBrush"];
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+            private void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private ObservableCollection<ServerEntry> Servers { get; } = new();
 
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
+            // Seed with three servers
+            Servers.Add(new ServerEntry { Name = "API Server" });
+            Servers.Add(new ServerEntry { Name = "Web Server" });
+            Servers.Add(new ServerEntry { Name = "Database" });
+            ServersList.ItemsSource = Servers;
         }
 
         private void LogOutput(string message)
@@ -48,225 +66,100 @@ namespace ServerLauncher
                 (SolidColorBrush)Resources["ErrorBrush"];
         }
 
-        // API Server
-        private void StartApiServer_Click(object sender, RoutedEventArgs e)
+        // Dynamic server controls
+        private void StartServer_Click(object sender, RoutedEventArgs e)
         {
-            if (_apiServerProcess?.HasExited == false)
+            if (sender is Button btn && btn.Tag is ServerEntry entry)
             {
-                LogOutput("API Server is already running!");
-                return;
-            }
-
-            try
-            {
-                if (string.IsNullOrWhiteSpace(_apiPath))
+                if (entry.Process?.HasExited == false)
                 {
-                    LogOutput("API path is empty. Set it in Settings.");
+                    LogOutput($"{entry.Name} is already running!");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(entry.Path))
+                {
+                    LogOutput($"Path for {entry.Name} is empty. Set it in Settings.");
                     return;
                 }
 
-                LogOutput($"Starting {_apiName}...");
-                _apiServerProcess = new Process
+                try
                 {
-                    StartInfo = new ProcessStartInfo
+                    LogOutput($"Starting {entry.Name}...");
+                    entry.Process = new Process
                     {
-                        FileName = "cmd.exe",
-                        Arguments = $"/c \"{_apiPath}\"",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        CreateNoWindow = true
-                    },
-                    EnableRaisingEvents = true
-                };
-                _apiServerProcess.Exited += (_, __) =>
-                {
-                    Dispatcher.Invoke(() =>
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = "cmd.exe",
+                            Arguments = $"/c \"{entry.Path}\"",
+                            UseShellExecute = false,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,
+                            CreateNoWindow = true
+                        },
+                        EnableRaisingEvents = true
+                    };
+                    entry.Process.Exited += (_, __) =>
                     {
-                        LogOutput($"{_apiName} exited.");
-                        UpdateStatus(ApiServerStatus, ApiServerStatusText, false);
-                    });
-                };
+                        Dispatcher.Invoke(() =>
+                        {
+                            LogOutput($"{entry.Name} exited.");
+                            entry.Running = false;
+                        });
+                    };
 
-                _apiServerProcess.Start();
-                LogOutput($"✓ {_apiName} started!");
-                UpdateStatus(ApiServerStatus, ApiServerStatusText, true);
-            }
-            catch (Exception ex)
-            {
-                LogOutput($"✗ Failed to start {_apiName}: {ex.Message}");
-                UpdateStatus(ApiServerStatus, ApiServerStatusText, false);
+                    entry.Process.Start();
+                    entry.Running = true;
+                    LogOutput($"✓ {entry.Name} started!");
+                }
+                catch (Exception ex)
+                {
+                    entry.Running = false;
+                    LogOutput($"✗ Failed to start {entry.Name}: {ex.Message}");
+                }
             }
         }
 
-        private void StopApiServer_Click(object sender, RoutedEventArgs e)
+        private void StopServer_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (sender is Button btn && btn.Tag is ServerEntry entry)
             {
-                if (_apiServerProcess != null && !_apiServerProcess.HasExited)
+                try
                 {
-                    LogOutput($"Stopping {_apiName}...");
-                    _apiServerProcess.Kill();
-                    _apiServerProcess.WaitForExit();
-                    LogOutput($"✓ {_apiName} stopped!");
+                    if (entry.Process != null && !entry.Process.HasExited)
+                    {
+                        LogOutput($"Stopping {entry.Name}...");
+                        entry.Process.Kill();
+                        entry.Process.WaitForExit();
+                        LogOutput($"✓ {entry.Name} stopped!");
+                    }
+                    else
+                    {
+                        LogOutput($"{entry.Name} is not running");
+                    }
+                    entry.Running = false;
                 }
-                else
+                catch (Exception ex)
                 {
-                    LogOutput($"{_apiName} is not running");
+                    LogOutput($"✗ Failed to stop {entry.Name}: {ex.Message}");
                 }
-                UpdateStatus(ApiServerStatus, ApiServerStatusText, false);
-            }
-            catch (Exception ex)
-            {
-                LogOutput($"✗ Failed to stop {_apiName}: {ex.Message}");
             }
         }
 
-        // Web Server
-        private void StartWebServer_Click(object sender, RoutedEventArgs e)
+        private void RemoveServer_Click(object sender, RoutedEventArgs e)
         {
-            if (_webServerProcess?.HasExited == false)
+            if (sender is Button btn && btn.Tag is ServerEntry entry)
             {
-                LogOutput("Web Server is already running!");
-                return;
-            }
-
-            try
-            {
-                if (string.IsNullOrWhiteSpace(_webPath))
+                if (entry.Process != null && !entry.Process.HasExited)
                 {
-                    LogOutput("Web path is empty. Set it in Settings.");
-                    return;
-                }
-
-                LogOutput($"Starting {_webName}...");
-                _webServerProcess = new Process
-                {
-                    StartInfo = new ProcessStartInfo
+                    try
                     {
-                        FileName = "cmd.exe",
-                        Arguments = $"/c \"{_webPath}\"",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        CreateNoWindow = true
-                    },
-                    EnableRaisingEvents = true
-                };
-                _webServerProcess.Exited += (_, __) =>
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        LogOutput($"{_webName} exited.");
-                        UpdateStatus(WebServerStatus, WebServerStatusText, false);
-                    });
-                };
-
-                _webServerProcess.Start();
-                LogOutput($"✓ {_webName} started!");
-                UpdateStatus(WebServerStatus, WebServerStatusText, true);
-            }
-            catch (Exception ex)
-            {
-                LogOutput($"✗ Failed to start {_webName}: {ex.Message}");
-                UpdateStatus(WebServerStatus, WebServerStatusText, false);
-            }
-        }
-
-        private void StopWebServer_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (_webServerProcess != null && !_webServerProcess.HasExited)
-                {
-                    LogOutput($"Stopping {_webName}...");
-                    _webServerProcess.Kill();
-                    _webServerProcess.WaitForExit();
-                    LogOutput($"✓ {_webName} stopped!");
+                        entry.Process.Kill();
+                        entry.Process.WaitForExit();
+                    }
+                    catch { }
                 }
-                else
-                {
-                    LogOutput($"{_webName} is not running");
-                }
-                UpdateStatus(WebServerStatus, WebServerStatusText, false);
-            }
-            catch (Exception ex)
-            {
-                LogOutput($"✗ Failed to stop {_webName}: {ex.Message}");
-            }
-        }
-
-        // Database
-        private void StartDatabase_Click(object sender, RoutedEventArgs e)
-        {
-            if (_databaseProcess?.HasExited == false)
-            {
-                LogOutput("Database is already running!");
-                return;
-            }
-
-            try
-            {
-                if (string.IsNullOrWhiteSpace(_dbPath))
-                {
-                    LogOutput("Database path is empty. Set it in Settings.");
-                    return;
-                }
-
-                LogOutput($"Starting {_dbName}...");
-                _databaseProcess = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = "cmd.exe",
-                        Arguments = $"/c \"{_dbPath}\"",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        CreateNoWindow = true
-                    },
-                    EnableRaisingEvents = true
-                };
-                _databaseProcess.Exited += (_, __) =>
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        LogOutput($"{_dbName} exited.");
-                        UpdateStatus(DatabaseStatus, DatabaseStatusText, false);
-                    });
-                };
-
-                _databaseProcess.Start();
-                LogOutput($"✓ {_dbName} started!");
-                UpdateStatus(DatabaseStatus, DatabaseStatusText, true);
-            }
-            catch (Exception ex)
-            {
-                LogOutput($"✗ Failed to start {_dbName}: {ex.Message}");
-                UpdateStatus(DatabaseStatus, DatabaseStatusText, false);
-            }
-        }
-
-        private void StopDatabase_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (_databaseProcess != null && !_databaseProcess.HasExited)
-                {
-                    LogOutput($"Stopping {_dbName}...");
-                    _databaseProcess.Kill();
-                    _databaseProcess.WaitForExit();
-                    LogOutput($"✓ {_dbName} stopped!");
-                }
-                else
-                {
-                    LogOutput($"{_dbName} is not running");
-                }
-                UpdateStatus(DatabaseStatus, DatabaseStatusText, false);
-            }
-            catch (Exception ex)
-            {
-                LogOutput($"✗ Failed to stop {_dbName}: {ex.Message}");
+                Servers.Remove(entry);
+                LogOutput($"Removed server: {entry.Name}");
             }
         }
 
@@ -297,6 +190,8 @@ namespace ServerLauncher
             var dialog = new OpenFileDialog { Title = "Select API executable" };
             if (dialog.ShowDialog() == true)
             {
+                EnsureServerIndex(0);
+                Servers[0].Path = dialog.FileName;
                 ApiPathInput.Text = dialog.FileName;
             }
         }
@@ -306,6 +201,8 @@ namespace ServerLauncher
             var dialog = new OpenFileDialog { Title = "Select Web executable" };
             if (dialog.ShowDialog() == true)
             {
+                EnsureServerIndex(1);
+                Servers[1].Path = dialog.FileName;
                 WebPathInput.Text = dialog.FileName;
             }
         }
@@ -315,26 +212,41 @@ namespace ServerLauncher
             var dialog = new OpenFileDialog { Title = "Select Database executable" };
             if (dialog.ShowDialog() == true)
             {
+                EnsureServerIndex(2);
+                Servers[2].Path = dialog.FileName;
                 DbPathInput.Text = dialog.FileName;
+            }
+        }
+
+        private void EnsureServerIndex(int index)
+        {
+            while (Servers.Count <= index)
+            {
+                Servers.Add(new ServerEntry());
             }
         }
 
         private void SaveSettings_Click(object sender, RoutedEventArgs e)
         {
-            _apiName = string.IsNullOrWhiteSpace(ApiNameInput.Text) ? "API Server" : ApiNameInput.Text.Trim();
-            _webName = string.IsNullOrWhiteSpace(WebNameInput.Text) ? "Web Server" : WebNameInput.Text.Trim();
-            _dbName = string.IsNullOrWhiteSpace(DbNameInput.Text) ? "Database" : DbNameInput.Text.Trim();
+            EnsureServerIndex(0);
+            EnsureServerIndex(1);
+            EnsureServerIndex(2);
+            Servers[0].Name = string.IsNullOrWhiteSpace(ApiNameInput.Text) ? "API Server" : ApiNameInput.Text.Trim();
+            Servers[1].Name = string.IsNullOrWhiteSpace(WebNameInput.Text) ? "Web Server" : WebNameInput.Text.Trim();
+            Servers[2].Name = string.IsNullOrWhiteSpace(DbNameInput.Text) ? "Database" : DbNameInput.Text.Trim();
 
-            _apiPath = ApiPathInput.Text.Trim();
-            _webPath = WebPathInput.Text.Trim();
-            _dbPath = DbPathInput.Text.Trim();
-
-            ApiNameText.Text = _apiName;
-            WebNameText.Text = _webName;
-            DbNameText.Text = _dbName;
+            Servers[0].Path = ApiPathInput.Text.Trim();
+            Servers[1].Path = WebPathInput.Text.Trim();
+            Servers[2].Path = DbPathInput.Text.Trim();
 
             SettingsInfo.Text = "Saved.";
             LogOutput("Settings saved. Updated names and paths.");
+        }
+
+        private void AddServer_Click(object sender, RoutedEventArgs e)
+        {
+            Servers.Add(new ServerEntry { Name = "New Server" });
+            LogOutput("Added a new server entry.");
         }
 
         protected override void OnClosed(EventArgs e)
